@@ -84,6 +84,7 @@ function createImagesDiv(markup) {
 function onError(err) {
     console.error(err);
     Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+    loadMoreBtn.hide();
 };
 
 loadMoreBtn.button.addEventListener("click", fetchImages);
@@ -93,10 +94,15 @@ async function fetchImages() {
     loadMoreBtn.disable();
     imagesApi.searchQuery = inputEl.value.trim();
     try {
+        if (imagesApi.searchQuery === "") {
+            loadMoreBtn.hide();
+            return;
+            
+        };
         const images = await imagesApi.getImages();
         let pageCount = imagesApi.totalHits / imagesApi.imagesPerPage;
         if (images.length === 0) {
-            throw new Error("Error");
+            throw new Error("No data");
         } else if (imagesApi.totalHits !== null && pageCount <= imagesApi.queryPage) {
             Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
             loadMoreBtn.disable();
@@ -105,7 +111,6 @@ async function fetchImages() {
             loadMoreBtn.enable();
             imagesApi.incrementPage();
         }
-        return images;
     } catch (err) {
         onError(err);
     }
