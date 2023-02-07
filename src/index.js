@@ -1,5 +1,4 @@
 import Notiflix from 'notiflix';
-
 import ImagesApi from './ImagesApi.js';
 import LoadMoreBtn from './components/LoadMoreBtn.js';
 import SimpleLightbox from "simplelightbox";
