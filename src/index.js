@@ -1,4 +1,3 @@
-import { formToJSON } from 'axios';
 import Notiflix from 'notiflix';
 
 import ImagesApi from './ImagesApi.js';
