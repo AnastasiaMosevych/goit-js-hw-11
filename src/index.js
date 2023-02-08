@@ -100,16 +100,22 @@ async function fetchImages() {
             
         };
         const images = await imagesApi.getImages();
-        let pageCount = imagesApi.totalHits / imagesApi.imagesPerPage;
+        let pageCount = Math.ceil(imagesApi.totalHits / imagesApi.imagesPerPage);
         if (images.length === 0) {
             throw new Error("No data");
-        } else if (imagesApi.totalHits !== null && pageCount <= imagesApi.queryPage) {
+        } else if (images.length < imagesApi.imagesPerPage) {
+            createImagesDiv(createMarkupForAllImages(images));
             Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
-            loadMoreBtn.disable();
+            loadMoreBtn.hide();
+            
+        } else if (imagesApi.totalHits !== null && pageCount < imagesApi.queryPage) {
+            Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
+            loadMoreBtn.hide();
         } else {
             createImagesDiv(createMarkupForAllImages(images));
             loadMoreBtn.enable();
             imagesApi.incrementPage();
+
         }
     } catch (err) {
         onError(err);
